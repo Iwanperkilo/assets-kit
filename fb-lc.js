@@ -1,28 +1,28 @@
 (function(){
-  function block(message) {
-    document.head.innerHTML += `
-      <style>
-        html::before {
-          content: "${message.replace(/"/g, '\\"')}";
-          display: block;
-          background: #fff;
-          color: red;
-          font-size: 18px;
-          padding: 3rem;
-          text-align: center;
-        }
-        body > * {
-          display: none !important;
-        }
-      </style>
-    `;
-  }
+  const block = (msg) => {
+    document.body.setAttribute("data-license", "blocked");
+    document.body.innerHTML = `
+      <div style="padding:3rem;text-align:center;color:red;font-size:18px;background:#fff">
+        ${msg}
+      </div>`;
+  };
 
-  function verifyLicense() {
+  const showLoading = () => {
+    document.body.setAttribute("data-license", "checking");
+  };
+
+  const applyValidState = () => {
+    window.__LICENSE_VERIFIED__ = true;
+    document.body.setAttribute("data-license", "ok");
+    const el = document.getElementById("license-check");
+    if (el) el.textContent = "VALIDATED";
+  };
+
+  const verifyLicense = () => {
+    showLoading();
     const licenseElement = document.querySelector('.idtema .widget-content');
     const licenseCode = licenseElement ? licenseElement.textContent.trim() : "";
-    const domain = window.location.hostname;
-
+    const domain = location.hostname;
     if (!licenseCode || licenseCode.length < 5) {
       block("❌ Lisensi tidak ditemukan.");
       return;
@@ -32,7 +32,6 @@
     const cached = JSON.parse(localStorage.getItem(cacheKey) || "{}");
     const now = Date.now();
 
-    // Jika hasil valid masih berlaku 1 hari (86400000 ms)
     if (cached.code === licenseCode && cached.status === "VALID" && (now - cached.timestamp) < 86400000) {
       applyValidState();
       return;
@@ -53,20 +52,13 @@
           }));
           applyValidState();
         } else {
-          block("❌ Lisensi tema tidak valid.");
+          block("❌ Lisensi tidak valid.");
         }
       })
       .catch(() => {
         block("⚠️ Gagal memverifikasi lisensi.");
       });
-  }
-
-  function applyValidState() {
-    window.__LICENSE_VERIFIED__ = true;
-    document.body.setAttribute("data-license", "ok");
-    var el = document.getElementById("license-check");
-    if (el) el.textContent = "VALIDATED";
-  }
+  };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", verifyLicense);
