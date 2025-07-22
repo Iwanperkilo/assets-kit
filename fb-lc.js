@@ -1,79 +1,75 @@
-(function(){
-  const CACHE_KEY = "__license_status";
-  const CACHE_TIME_KEY = "__license_checked_at";
-  const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 jam dalam milidetik
-
-  function setStatus(status) {
-    document.body.setAttribute("data-license", status);
-    if (status === "ok") {
-      localStorage.setItem(CACHE_KEY, "ok");
-      localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
-    }
-  }
-
+(function() {
   function block(message) {
     document.head.innerHTML += `
       <style>
-        body::before {
+        html::before {
           content: "${message.replace(/"/g, '\\"')}";
-          position: fixed;
-          inset: 0;
+          display: block;
           background: #fff;
           color: red;
           font-size: 18px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
+          padding: 3rem;
+          text-align: center;
         }
-        body *:not(script):not(#license-check) {
+        body > * {
           display: none !important;
         }
       </style>
     `;
-    document.body.style.opacity = "1";
   }
 
-  function validateNow() {
-    const el = document.querySelector('.idtema .widget-content');
-    const code = el ? el.textContent.trim() : "";
-    const domain = window.location.hostname;
+  function verifyLicense() {
+    // Periksa apakah lisensi sudah diverifikasi di localStorage
+    if (localStorage.getItem('themeLicenseStatus') === 'VALID') {
+      window.__LICENSE_VERIFIED__ = true;
+      document.body.setAttribute("data-license", "ok");
+      var el = document.getElementById("license-check");
+      if (el) el.textContent = "VALIDATED";
+      console.log("Lisensi sudah divalidasi dari penyimpanan lokal.");
+      return; // Berhenti di sini jika sudah valid
+    }
 
-    if (!code || code.length < 5) {
+    var licenseElement = document.querySelector('.idtema .widget-content');
+    var licenseCode = licenseElement ? licenseElement.textContent.trim() : "";
+    var domain = window.location.hostname;
+
+    if (!licenseCode || licenseCode.length < 5) {
       block("❌ Lisensi tidak ditemukan.");
       return;
     }
 
-    fetch("https://script.google.com/macros/s/AKfycbw_Urr-iGnIvQfTtJp7-gMdgXd_UKUiPIKWXA2dlLumhzTWiRRYAQnkvTCGzgbsd0Y0/exec?license="
-      + encodeURIComponent(code) + "&domain=" + encodeURIComponent(domain))
-      .then(r => r.text())
+    var url = "https://script.google.com/macros/s/AKfycbw_Urr-iGnIvQfTtJp7-gMdgXd_UKUiPIKWXA2dlLumhzTWiRRYAQnkvTCGzgbsd0Y0/exec?license=" +
+      encodeURIComponent(licenseCode) + "&domain=" + encodeURIComponent(domain);
+
+    fetch(url)
+      .then(res => res.text())
       .then(result => {
         if (result === "VALID") {
-          setStatus("ok");
+          window.__LICENSE_VERIFIED__ = true;
+          document.body.setAttribute("data-license", "ok");
+          var el = document.getElementById("license-check");
+          if (el) el.textContent = "VALIDATED";
+          // Simpan status valid di localStorage
+          localStorage.setItem('themeLicenseStatus', 'VALID');
+          console.log("Lisensi berhasil divalidasi dan disimpan.");
         } else {
           block("❌ Lisensi tema tidak valid.");
+          // Hapus status yang tersimpan jika menjadi tidak valid
+          localStorage.removeItem('themeLicenseStatus');
+          console.log("Lisensi tidak valid.");
         }
       })
       .catch(() => {
         block("⚠️ Gagal memverifikasi lisensi.");
+        // Hapus status yang tersimpan jika verifikasi gagal
+        localStorage.removeItem('themeLicenseStatus');
+        console.log("Gagal memverifikasi lisensi.");
       });
   }
 
-  function checkLicense() {
-    const lastCheck = parseInt(localStorage.getItem(CACHE_TIME_KEY) || "0", 10);
-    const now = Date.now();
-    const isValid = localStorage.getItem(CACHE_KEY) === "ok";
-
-    if (isValid && now - lastCheck < CACHE_DURATION) {
-      setStatus("ok");
-    } else {
-      validateNow();
-    }
-  }
-
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", checkLicense);
+    document.addEventListener("DOMContentLoaded", verifyLicense);
   } else {
-    checkLicense();
+    verifyLicense();
   }
 })();
