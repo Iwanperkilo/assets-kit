@@ -1,4 +1,4 @@
-(function() {
+(function(){
   function block(message) {
     document.head.innerHTML += `
       <style>
@@ -19,52 +19,53 @@
   }
 
   function verifyLicense() {
-    // Periksa apakah lisensi sudah diverifikasi di localStorage
-    if (localStorage.getItem('themeLicenseStatus') === 'VALID') {
-      window.__LICENSE_VERIFIED__ = true;
-      document.body.setAttribute("data-license", "ok");
-      var el = document.getElementById("license-check");
-      if (el) el.textContent = "VALIDATED";
-      console.log("Lisensi sudah divalidasi dari penyimpanan lokal.");
-      return; // Berhenti di sini jika sudah valid
-    }
-
-    var licenseElement = document.querySelector('.idtema .widget-content');
-    var licenseCode = licenseElement ? licenseElement.textContent.trim() : "";
-    var domain = window.location.hostname;
+    const licenseElement = document.querySelector('.idtema .widget-content');
+    const licenseCode = licenseElement ? licenseElement.textContent.trim() : "";
+    const domain = window.location.hostname;
 
     if (!licenseCode || licenseCode.length < 5) {
       block("❌ Lisensi tidak ditemukan.");
       return;
     }
 
-    var url = "https://script.google.com/macros/s/AKfycbw_Urr-iGnIvQfTtJp7-gMdgXd_UKUiPIKWXA2dlLumhzTWiRRYAQnkvTCGzgbsd0Y0/exec?license=" +
-      encodeURIComponent(licenseCode) + "&domain=" + encodeURIComponent(domain);
+    const cacheKey = "license_" + domain;
+    const cached = JSON.parse(localStorage.getItem(cacheKey) || "{}");
+    const now = Date.now();
+
+    // Jika hasil valid masih berlaku 1 hari (86400000 ms)
+    if (cached.code === licenseCode && cached.status === "VALID" && (now - cached.timestamp) < 86400000) {
+      applyValidState();
+      return;
+    }
+
+    const url = "https://script.google.com/macros/s/AKfycbw_Urr-iGnIvQfTtJp7-gMdgXd_UKUiPIKWXA2dlLumhzTWiRRYAQnkvTCGzgbsd0Y0/exec" +
+                "?license=" + encodeURIComponent(licenseCode) +
+                "&domain=" + encodeURIComponent(domain);
 
     fetch(url)
       .then(res => res.text())
       .then(result => {
         if (result === "VALID") {
-          window.__LICENSE_VERIFIED__ = true;
-          document.body.setAttribute("data-license", "ok");
-          var el = document.getElementById("license-check");
-          if (el) el.textContent = "VALIDATED";
-          // Simpan status valid di localStorage
-          localStorage.setItem('themeLicenseStatus', 'VALID');
-          console.log("Lisensi berhasil divalidasi dan disimpan.");
+          localStorage.setItem(cacheKey, JSON.stringify({
+            code: licenseCode,
+            status: "VALID",
+            timestamp: now
+          }));
+          applyValidState();
         } else {
           block("❌ Lisensi tema tidak valid.");
-          // Hapus status yang tersimpan jika menjadi tidak valid
-          localStorage.removeItem('themeLicenseStatus');
-          console.log("Lisensi tidak valid.");
         }
       })
       .catch(() => {
         block("⚠️ Gagal memverifikasi lisensi.");
-        // Hapus status yang tersimpan jika verifikasi gagal
-        localStorage.removeItem('themeLicenseStatus');
-        console.log("Gagal memverifikasi lisensi.");
       });
+  }
+
+  function applyValidState() {
+    window.__LICENSE_VERIFIED__ = true;
+    document.body.setAttribute("data-license", "ok");
+    var el = document.getElementById("license-check");
+    if (el) el.textContent = "VALIDATED";
   }
 
   if (document.readyState === "loading") {
