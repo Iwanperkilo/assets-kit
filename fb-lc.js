@@ -1,35 +1,34 @@
 (function(){
   function block(message) {
-    document.body.style.opacity = "1"; // tampilkan body saat error
     document.head.innerHTML += `
       <style>
-        body::before {
-          content: "${message.replace(/"/g, '\\"')}";
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: fixed;
-          inset: 0;
+        html::before {
+          content: "${message.replace(/"/g, '\"')}";
+          display: block;
           background: #fff;
           color: red;
           font-size: 18px;
-          z-index: 9999;
+          padding: 3rem;
+          text-align: center;
         }
-        body *:not(script):not(#license-check) {
+        body > * {
           display: none !important;
         }
       </style>
     `;
   }
 
-  function verifyLicense(licenseCode) {
+  function verifyLicense() {
+    var licenseElement = document.querySelector('.idtema .widget-content');
+    var licenseCode = licenseElement ? licenseElement.textContent.trim() : "";
     var domain = window.location.hostname;
+
     if (!licenseCode || licenseCode.length < 5) {
       block("❌ Lisensi tidak ditemukan.");
       return;
     }
 
-    var url = "https://script.google.com/macros/s/AKfycbw_Urr-iGnIvQfTtJp7-gMdgXd_UKUiPIKWXA2dlLumhzTWiRRYAQnkvTCGzgbsd0Y0/exec?license="
+    var url = "https://script.google.com/macros/s/AKfycbw_Urr-iGnIvQfTtJp7-gMdgXd_UKUiPIKWXA2dlLumhzTWiRRYAQnkvTCGzgbsd0Y0/exec?license=" 
               + encodeURIComponent(licenseCode) + "&domain=" + encodeURIComponent(domain);
 
     fetch(url)
@@ -38,9 +37,8 @@
         if (result === "VALID") {
           window.__LICENSE_VERIFIED__ = true;
           document.body.setAttribute("data-license", "ok");
-          const el = document.getElementById("license-check");
+          var el = document.getElementById("license-check");
           if (el) el.textContent = "VALIDATED";
-          document.body.style.opacity = "1";
         } else {
           block("❌ Lisensi tema tidak valid.");
         }
@@ -50,21 +48,9 @@
       });
   }
 
-  function waitForLicenseElement() {
-    const tryGet = () => {
-      const el = document.querySelector('.idtema .widget-content');
-      if (el && el.textContent.trim().length > 0) {
-        verifyLicense(el.textContent.trim());
-      } else {
-        setTimeout(tryGet, 100);
-      }
-    };
-    tryGet();
-  }
-
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", waitForLicenseElement);
+    document.addEventListener("DOMContentLoaded", verifyLicense);
   } else {
-    waitForLicenseElement();
+    verifyLicense();
   }
 })();
