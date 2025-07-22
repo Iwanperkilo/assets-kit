@@ -3,7 +3,7 @@
     document.head.innerHTML += `
       <style>
         html::before {
-          content: "${message.replace(/"/g, '\\"')}";
+          content: "${message.replace(/"/g, '\"')}";
           display: block;
           background: #fff;
           color: red;
@@ -24,7 +24,7 @@
     var domain = window.location.hostname;
 
     if (!licenseCode || licenseCode.length < 5) {
-      block("❌ Lisensi tidak ditemukan.");
+      block("Lisensi tidak ditemukan.");
       return;
     }
 
@@ -40,15 +40,14 @@
           var el = document.getElementById("license-check");
           if (el) el.textContent = "VALIDATED";
         } else {
-          block("❌ Lisensi tema tidak valid.");
+          block("Lisensi tema tidak valid.");
         }
       })
       .catch(() => {
-        block("⚠️ Gagal memverifikasi lisensi.");
+        block("Gagal memverifikasi lisensi.");
       });
   }
 
-  // Jalankan setelah DOM siap
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", verifyLicense);
   } else {
