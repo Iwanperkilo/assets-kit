@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dokumentasi Tema Blogger - Profile Sch.</title>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+        background: #f9f9f9;
+        color: #333;
+      }
+
+      header {
+        background: #2c3e50;
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+      }
+
+      .container {
+        display: flex;
+        max-width: 1200px;
+        margin: auto;
+      }
+      img {
+        width: 100%;
+      }
+      nav {
+        flex: 1;
+        max-width: 250px;
+        background: #f0f0f0;
+        padding: 1rem;
+        position: sticky;
+        top: 0;
+        height: fit-content;
+      }
+
+      nav h3 {
+        margin-top: 0;
+      }
+
+      nav ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      nav ul li {
+        margin-bottom: 0.8rem;
+      }
+
+      nav ul li a {
+        color: #2c3e50;
+        text-decoration: none;
+      }
+
+      nav ul li a:hover {
+        text-decoration: underline;
+      }
+
+      main {
+        flex: 3;
+        padding: 2rem;
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      }
+
+      h2 {
+        color: #2c3e50;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+      }
+
+      .section {
+        padding: 2rem 0 0;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem 1rem;
+        color: #999;
+        font-size: 0.9rem;
+      }
+
+      pre {
+        background: #eee;
+        padding: 1rem;
+        overflow-x: auto;
+      }
+
+      code {
+        background: #f1f1f1;
+        padding: 0.2rem 0.4rem;
+        font-family: monospace;
+      }
+
+      .changelog {
+        background: #f5f5f5;
+        border-left: 4px solid #2c3e50;
+        padding: 1rem;
+        font-size: 0.9rem;
+      }
+
+      /* TOGGLE BUTTON */
+      .toggle-wrapper {
+        display: none;
+      }
+
+      .toggle-btn {
+        background: #2c3e50;
+        color: #fff;
+        padding: 0.8rem 1.2rem;
+        border: none;
+        width: 100%;
+        font-size: 1rem;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .toggle-btn:focus {
+        outline: none;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+
+        nav {
+          display: none;
+          max-width: 100%;
+          position: relative;
+          padding: 1rem;
+          background: #f0f0f0;
+          z-index: 1;
+        }
+
+        nav.open {
+          display: block;
+          animation: slideDown 0.3s ease-out;
+        }
+
+        .toggle-wrapper {
+          display: block;
+          position: sticky;
+          top: 0;
+          background: #2c3e50;
+          z-index: 999;
+        }
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      pre code {
+        background: #f9f9f9;
+        border-left: 4px solid #3f51b5;
+        padding: 1rem;
+        display: block;
+        overflow-x: auto;
+        color: #333;
+        font-family: monospace;
+        font-size: 0.9rem;
+        white-space: pre-wrap;
+        border-radius: 6px;
+      }
+      .code-block {
+        position: relative;
+        margin: 1rem 0;
+      }
+      .copy-button {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: #3f51b5;
+        color: white;
+        border: none;
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        z-index: 2;
+      }
+      .copy-button:active {
+        transform: scale(0.95);
+      }
+      pre code {
+        display: block;
+        background: #f5f5f5;
+        padding: 1rem;
+        border-left: 4px solid #3f51b5;
+        color: #333;
+        overflow-x: auto;
+        font-family: monospace;
+        font-size: 0.9rem;
+        white-space: pre-wrap;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Dokumentasi Tema Blogger - Profile Sch.</h1>
+      <p>Versi 1.0.0 • by with.web.id</p>
+    </header>
+
+    <!-- Sticky toggle menu di mobile -->
+    <div class="toggle-wrapper">
+      <button class="toggle-btn" onclick="toggleNav()">☰ Navigasi</button>
+      <nav id="sidebar">
+        <h3>Navigasi</h3>
+        <ul>
+          <li><a href="#fitur">Fitur Utama</a></li>
+          <li><a href="#instalasi">Cara Instalasi</a></li>
+          <li>
+            <a href="#layout">Pengaturan Tema</a>
+            <ol>
+              <li><a href="#label">Setting Label</a></li>
+              <li><a href="#kode-menu">Membuat Menu</a></li>
+              <li><a href="#">Membuat Slider</a></li>
+            </ol>
+          </li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#changelog">Changelog</a></li>
+          <li><a href="#lisensi">Lisensi</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Container utama -->
+    <div class="container">
+      <!-- Sidebar (desktop only) -->
+      <nav id="sidebar-desktop">
+        <h3>Navigasi</h3>
+        <ul>
+          <li><a href="#fitur">Fitur Utama</a></li>
+          <li><a href="#instalasi">Cara Instalasi</a></li>
+          <li>
+            <a href="#layout">Pengaturan Tema</a>
+            <ol>
+              <li><a href="#label">Setting Label</a></li>
+              <li><a href="#kode-menu">Membuat Menu</a></li>
+              <li><a href="#">Membuat Slider</a></li>
+            </ol>
+          </li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#changelog">Changelog</a></li>
+          <li><a href="#lisensi">Lisensi</a></li>
+        </ul>
+      </nav>
+
+      <!-- Konten utama -->
+      <main>
+        <section id="fitur" class="section">
+          <h2>1. Fitur Tema</h2>
+          <ul>
+            <li>Desain modern dan responsif</li>
+            <li>Kontrol Tema dari dashboard tata letak</li>
+            <ul>
+              <li>Logo dan edit menu</li>
+              <li>Edit Slider heropage</li>
+              <li>
+                Edit semua elemen homepage cukup dari dashboard tata letak
+              </li>
+            </ul>
+            <li>Kontrol warna dari dashboard pengaturan</li>
+          </ul>
+        </section>
+
+        <section id="instalasi" class="section">
+          <h2>2. Cara Instalasi</h2>
+          <ol>
+            <li>Masuk ke <strong>Dashboard Blogger</strong>.</li>
+            <li>
+              Pilih menu <strong>Tema</strong> → klik ikon panah ▼ →
+              <strong>Pulihkan</strong>.
+            </li>
+            <li>Upload file <code>profiesch.xml</code> dari paket ZIP tema.</li>
+            <li>Simpan</li>
+            <li>
+              Masuk ke <strong>Tata letak / Layout</strong> → scroll kebawah
+              sampai kolom <strong>Lisensi</strong>→ masukkan lisensi→ simpan<br />
+              <img
+                src="https://blogger.googleusercontent.com/img/a/AVvXsEgiq8p0oFjsdJP3WvFbddI7ZwPFmIKUNjeyl52JWMBPZWtctcKcvA5r7hsdOojTmcWpjXaRyzVSfzqeLPJmOOMfkWR2vva7wm3XqAekN3VysvXjP_kTKFBTAmlORXka1hmrWivacEFYpWlXvaGjg5FOjG_mODy66_SLpq99xrfeUsxPSJ71Wuvz3o7HZmWw=w640-h139"
+              />
+            </li>
+            <li>
+              <strong>Selesai</strong> - Tema siap digunakan / disesuaikan
+            </li>
+          </ol>
+        </section>
+
+        <section id="layout" class="section">
+          <h2>3. Pengaturan Tema</h2>
+          <p>
+            Berikut ini langkah - langkah untuk mengatur tema Profile Sch.
+            Pastikan mengikuti panduan agar tema berjalan optimal.
+          </p>
+          <section id="label" class="section">
+            <h3>1. Pengaturan Label Wajib</h3>
+            <p>
+              Tema ini menggunakan sistem label (kategori) untuk menampilkan
+              konten secara terstruktur pada bagian-bagian tertentu. Pastikan
+              Anda membuat dan menggunakan label berikut agar fitur tema
+              berjalan dengan baik:
+            </p>
+
+            <ul>
+              <li>
+                <strong>Artikel</strong> — Label utama untuk semua postingan
+                reguler atau berita blog. Label ini bisa digabung dengan label
+                lainnya untuk postingan blog.<br /><strong style="color: red"
+                  ><i
+                    >"Label Artikel Jangan digabung dengan Data Guru dan
+                    Gallery"</i
+                  ></strong
+                >
+              </li>
+              <li>
+                <strong>Data Guru</strong> — Label khusus untuk menampilkan
+                daftar atau profil guru di bagian tertentu.
+              </li>
+              <li>
+                <strong>Gallery</strong> — Label khusus untuk menampilkan gambar
+                atau galeri di halaman galeri.
+              </li>
+            </ul>
+
+            <h3>Cara Menambahkan Label Saat Menulis Postingan</h3>
+            <ol>
+              <li>
+                Buka menu <strong>Postingan</strong> →
+                <strong>Postingan Baru</strong>
+              </li>
+              <li>
+                Di sisi kanan (sidebar), cari bagian <strong>Label</strong>
+              </li>
+              <li>
+                Ketik nama label sesuai: <code>Artikel</code>,
+                <code>Data Guru</code>, atau <code>Gallery</code>
+              </li>
+              <li>
+                Gunakan <strong>hanya satu label wajib</strong> untuk tiap
+                kategori, agar tidak tercampur.
+              </li>
+              <li>Publikasikan postingan seperti biasa.</li>
+            </ol>
+
+            <p>
+              <strong>Catatan:</strong> Label bersifat case-sensitive, jadi
+              penulisan harus sesuai (misal: "<strong>Gallery</strong>", bukan
+              "gallery" atau "GALERI").<br />
+              <strong
+                >Anda juga dapat membuat / menambahkan label lainnya.</strong
+              >
+            </p>
+          </section>
+          <section id="kode-menu" class="section">
+            <h3>2. Navigasi Menu Utama</h3>
+            <h4>2.1 Kode Navigasi Menu Utama</h4>
+            <p>
+              Berikut ini adalah struktur menu navigasi utama yang digunakan
+              dalam tema ini. Menu ini mendukung dropdown, mega menu, dan
+              responsif mobile dengan toggle.
+            </p>
+            <div class="code-block">
+              <button class="copy-button" onclick="copyCode(this)">
+                Salin
+              </button>
+              <pre><code>&lt;li&gt;&lt;a href='/'&gt;Beranda&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;
+  &lt;a class='desktop-item' href='#'&gt;Profile&lt;/a&gt;
+  &lt;input id='showDrop' type='checkbox' class="show-toggler" /&gt;
+  &lt;label class='mobile-item' for='showDrop'&gt;Profile&lt;/label&gt;
+  &lt;ul class='drop-menu'&gt;
+    &lt;li&gt;&lt;a href='/p/profil-sekolah.html'&gt;Tentang Profile Sch&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href='/p/sambutan-kepala-sekolah.html'&gt;Sambutan Kepala Sekolah&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href='/search/label/Data%20Guru'&gt;Data Guru dan Staf&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href='#'&gt;Visi dan Misi&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='/search/label/Gallery'&gt;Gallery&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href='#'&gt;Contact&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href='/search/label/Artikel'&gt;Blog&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+            </div>
+
+            <p>
+              <strong>Catatan:</strong> Gunakan struktur kode tersebut untuk
+              membuat menu,
+              <strong>jangan merubah nama class dan id</strong> agar tampil
+              sesuai pengaturan tema.
+            </p>
+
+            <h4>2.2. Kode Mega Menu</h4>
+            <p>
+              Fitur <strong>Mega Menu</strong> untuk bagian menu seperti PPDB,
+              Promo, atau lainnya. Mega Menu memungkinkan menampilkan lebih
+              banyak tautan, gambar, dan konten terstruktur secara lebar.
+            </p>
+
+            <p>
+              Berikut adalah contoh struktur untuk bagian
+              <strong>Mega Menu</strong>:
+            </p>
+            <div class="code-block">
+              <button class="copy-button" onclick="copyCode(this)">
+                Salin
+              </button>
+              <pre><code>&lt;li&gt;
+  &lt;a class='promo desktop-item' href='#'&gt;PPDB&lt;/a&gt;
+  &lt;input id='show' type='checkbox' class="show-toggler" /&gt;
+  &lt;label class='promo mobile-item' for='show'&gt;PPDB&lt;/label&gt;
+
+  &lt;div class='mega-box'&gt;
+    &lt;div class='content'&gt;
+
+      &lt;div class='row'&gt;
+        &lt;a class="no-padding" href="#"&gt;
+          &lt;img alt='#' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh6I2i5LIst5-pIGpRdoNm99NBOJvg0EL1uO1UJuwDkIgMGqyGtUa0N3LkOq2v-5fmlJz2MR8Y1mo17aDwu3odMpTyzuRTut20a3C8U5MvN7sOdFq_XY6T3fMZ-BNSp3Gsz6eavSBxeUmJZInUDz1cBsUdntZJuzYWmS3v9G-41fDLRHMoxq1N-x8q5wuDc/s320/promo-install-wp.jpg'/&gt;
+        &lt;/a&gt;
+      &lt;/div&gt;
+
+      &lt;div class='row'&gt;
+        &lt;div&gt;Mega Menu&lt;/div&gt;
+        &lt;ul class='mega-links'&gt;
+          &lt;li&gt;&lt;a href="#"&gt;Link 1&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#"&gt;Link 2&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#"&gt;Link 3&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#"&gt;Link 4&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href='https://wa.me/6285141051822?text=InstallWP' target='_blank' rel='nofollow'&gt;WA: +6285141051822&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+
+      &lt;div class='row'&gt;
+        &lt;div&gt;Mega Menu 2&lt;/div&gt;
+        &lt;ul class='mega-links'&gt;
+          &lt;li&gt;&lt;a href="#"&gt;Link 1&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#"&gt;Link 2&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#"&gt;Link 3&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#"&gt;Link 4&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href='https://wa.me/6285141051822?text=InstallWP' target='_blank' rel='nofollow'&gt;WA: +6285141051822&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/li&gt;
+</code></pre>
+            </div>
+
+            <div class="note">
+              <strong>Catatan Penting:</strong>
+              <ul>
+                <li>
+                  Jangan mengubah nama <code>class</code> seperti
+                  <code>desktop-item</code>, <code>mobile-item</code>,
+                  <code>show-toggler</code>, <code>drop-menu</code>,
+                  <code>mega-box</code>, <code>mega-links</code>, atau
+                  <code>row</code>.
+                </li>
+                <li>
+                  Jangan mengubah <code>id</code> pada elemen
+                  <code>&lt;input type="checkbox"&gt;</code>, kecuali Anda tahu
+                  dampaknya.
+                </li>
+                <li>
+                  Anda hanya boleh mengubah:
+                  <ul>
+                    <li>
+                      ✅ <strong>Teks menu</strong> seperti "Profile",
+                      "Gallery", "PPDB", dsb.
+                    </li>
+                    <li>
+                      ✅ <strong>Link</strong> (<code>href</code>) untuk
+                      menyesuaikan tujuan menu
+                    </li>
+                    <li>
+                      ✅ <strong>Gambar</strong> dalam Mega Menu (src gambar)
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  Mengubah struktur HTML atau nama class/id secara sembarangan
+                  dapat menyebabkan tampilan menu menjadi rusak atau tidak
+                  responsif.
+                </li>
+                <li>
+                  Kode ini dirancang khusus untuk dipasang di
+                  <strong>“Tata Letak” → “Menu”</strong> dalam Blogger.<br />
+                  <img
+                    src="https://blogger.googleusercontent.com/img/a/AVvXsEgwKBaz-vbOrdyKF0ibh6qIEB48u54ADRkL8PdHKjBah0vOX1G3EVCYgbom9C5boGZmHwrNK48qkY1UsBYR_kFfdCTY1DOutYsd2_HeKMwMaR4OSXJg0cLXX51mdX-hfQi3SszD40noj6L-5ZuN3cwfy7y5lUz962p0pk8dQM-FvpI6OneHt8DZJO5U7lHw=w640-h160"
+                  />
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+
+        <section id="faq" class="section">
+          <h2>4. FAQ (Pertanyaan Umum)</h2>
+          <ul>
+            <li>
+              <strong>Gambar thumbnail tidak muncul?</strong><br />
+              Pastikan ada <code>&lt;img&gt;</code> di awal isi postingan.
+            </li>
+            <li>
+              <strong>Komentar tidak muncul?</strong><br />
+              Cek setelan komentar dan pastikan blog tidak privat.
+            </li>
+            <li>
+              <strong>Bagaimana ganti warna?</strong><br />
+              Edit CSS di bagian <code>:root</code> atau gunakan Desainer Tema.
+            </li>
+          </ul>
+        </section>
+
+        <section id="changelog" class="section">
+          <h2>5. Changelog</h2>
+          <div class="changelog">
+            <strong>Versi 1.0.0</strong><br />
+            - Rilis awal tema Profile Sch.<br />
+            - Optimasi tema
+          </div>
+        </section>
+
+        <section id="lisensi" class="section">
+          <h2>6. Lisensi</h2>
+          <p>
+            Tema ini didistribusikan dengan <strong>Lisensi Lifetime</strong>.
+            Pembeli hanya perlu membayar satu kali dan dapat menggunakan tema
+            ini selamanya.
+          </p>
+          <p><strong>Yang diizinkan:</strong></p>
+          <ol>
+            <li>✔ Digunakan untuk 1 blog / website</li>
+            <li>✔ Bebas digunakan tanpa batas waktu</li>
+          </ol>
+          <p><strong>Yang tidak diizinkan:</strong></p>
+          <ol>
+            <li>✘ Dilarang menjual ulang tema ini</li>
+            <li>✘ Dilarang membagikan secara gratis</li>
+            <li>✘ Dilarang digunakan untuk klien tanpa izin</li>
+          </ol>
+        </section>
+      </main>
+    </div>
+
+    <footer>&copy; 2025 with.web.id — Semua hak cipta dilindungi.</footer>
+
+    <script>
+      function toggleNav() {
+        const nav = document.getElementById("sidebar");
+        nav.classList.toggle("open");
+      }
+
+      // Sembunyikan sidebar desktop di mobile
+      const sidebarDesktop = document.getElementById("sidebar-desktop");
+      const mediaQuery = window.matchMedia("(max-width: 768px)");
+      function handleResponsive(e) {
+        sidebarDesktop.style.display = e.matches ? "none" : "block";
+      }
+      handleResponsive(mediaQuery);
+      mediaQuery.addListener(handleResponsive);
+    </script>
+    <script>
+      function copyCode(button) {
+        const code = button.nextElementSibling.innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          const originalText = button.innerText;
+          button.innerText = "Disalin!";
+          setTimeout(() => {
+            button.innerText = originalText;
+          }, 2000);
+        });
+      }
+    </script>
+  </body>
+</html>
