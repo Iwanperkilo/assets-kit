@@ -1,45 +1,69 @@
-(function(){
-  var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx9SHqCdrpkTyubb5gtw8vwKh4x9J9VzLUfx6Z0mSVSsPHzvXi9Y6XCOQkXr8iluWDD/exec"; 
-  var CACHE_KEY = "license_cache";
-  var CACHE_TIME = 24 * 60 * 60 * 1000; // 24 jam
+// Ambil lisensi dari widget Tata Letak
+function getLicenseFromLayout() {
+  const el = document.getElementById('theme-license');
+  return el ? el.getAttribute('data-license') : '';
+}
 
-  // Ambil lisensi dari widget Blogger (dashboard tata letak)
-  var LICENSE_KEY = window.LICENSE_KEY || "ISI-LISENSI-DI-DASHBOARD";
-
-  function getDomain(){
-    return location.hostname.replace(/^www\./, '');
-  }
-
-  function blockSite(msg){
-    document.body.innerHTML = "<div style='font-family:sans-serif;text-align:center;margin-top:50px;font-size:20px;color:red;'>" + msg + "</div>";
-    document.body.style.background = "#fff";
-    throw new Error("Lisensi tidak valid");
-  }
-
-  function validateLicense(){
-    var cache = localStorage.getItem(CACHE_KEY);
-    if (cache) {
-      try {
-        var parsed = JSON.parse(cache);
-        if (Date.now() - parsed.time < CACHE_TIME) {
-          if (parsed.status === "valid") return true;
-          if (parsed.status === "expired") blockSite("Lisensi sudah kadaluarsa");
-          blockSite("Lisensi tidak valid");
-        }
-      } catch(e){}
+(function(global) {
+  function validateLicense(license, domain, callback) {
+    if (!license || !domain) {
+      console.warn('License dan domain harus diisi');
+      callback({status:'invalid', reason:'missing_license_or_domain'});
+      return;
     }
 
-    var script = document.createElement("script");
-    script.src = WEB_APP_URL + "?license=" + encodeURIComponent(LICENSE_KEY) + "&domain=" + encodeURIComponent(getDomain()) + "&callback=handleValidation&_=" + Date.now();
+    const cacheKey = 'licenseCache_' + license + '_' + domain;
+    const cacheExpiryMs = 24 * 60 * 60 * 1000; // 24 jam
+    const cached = localStorage.getItem(cacheKey);
+
+    if (cached) {
+      try {
+        const data = JSON.parse(cached);
+        if (Date.now() - data.timestamp < cacheExpiryMs) {
+          console.log('License loaded from cache');
+          callback(data.response);
+          return;
+        } else {
+          localStorage.removeItem(cacheKey);
+        }
+      } catch {
+        localStorage.removeItem(cacheKey);
+      }
+    }
+
+    const callbackName = 'jsonp_callback_' + Math.random().toString(36).substring(2, 8);
+    window[callbackName] = function(response) {
+      delete window[callbackName];
+      document.body.removeChild(script);
+
+      localStorage.setItem(cacheKey, JSON.stringify({
+        timestamp: Date.now(),
+        response: response
+      }));
+
+      callback(response);
+    };
+
+    const script = document.createElement('script');
+    script.src = `https://script.google.com/macros/s/AKfycbx9SHqCdrpkTyubb5gtw8vwKh4x9J9VzLUfx6Z0mSVSsPHzvXi9Y6XCOQkXr8iluWDD/exec?action=validate&license=${encodeURIComponent(license)}&domain=${encodeURIComponent(domain)}&callback=${callbackName}`;
     document.body.appendChild(script);
   }
 
-  window.handleValidation = function(res){
-    localStorage.setItem(CACHE_KEY, JSON.stringify({status: res.status, time: Date.now()}));
-    if (res.status === "valid") return;
-    if (res.status === "expired") blockSite("Lisensi sudah kadaluarsa");
-    blockSite("Lisensi tidak valid");
-  };
+  global.validateLicense = validateLicense;
 
-  validateLicense();
-})();
+})(window);
+
+// Jalankan validasi otomatis
+document.addEventListener('DOMContentLoaded', function() {
+  const userLicense = getLicenseFromLayout();
+  const userDomain = window.location.hostname;
+
+  validateLicense(userLicense, userDomain, function(result) {
+    if (result.status === 'valid') {
+      console.log('License valid:', result);
+    } else {
+      console.warn('License invalid:', result.reason);
+      document.body.innerHTML = '<h1>Lisensi Tidak Valid</h1>';
+    }
+  });
+});
