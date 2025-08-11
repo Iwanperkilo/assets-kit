@@ -4,7 +4,7 @@
  */
 
 // --- CONFIGURATION ---
-const SCRIPT_URL = 'https://script.google.com/macros/s/...'
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9SHqCdrpkTyubb5gtw8vwKh4x9J9VzLUfx6Z0mSVSsPHzvXi9Y6XCOQkXr8iluWDD/exec'
 const CACHE_KEY = 'license-validation-cache';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
