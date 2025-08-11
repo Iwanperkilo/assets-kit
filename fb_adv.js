@@ -1,26 +1,34 @@
 (function() {
-    // Ambil lisensi dari elemen Blogger Layout
     var LICENSE_KEY = document.getElementById("license-widget")?.textContent?.trim() || "";
     var DOMAIN = location.hostname.replace(/^www\./, "");
     var CACHE_KEY = "license_cache_" + DOMAIN;
     var CACHE_TIME = 24 * 60 * 60 * 1000; // 24 jam
 
-    // Fungsi untuk memproses hasil validasi
+    function blockSite(msg) {
+        document.body.innerHTML = `
+            <div style="font-family:sans-serif;text-align:center;padding:50px;">
+                <h1>❌ Lisensi Tidak Valid</h1>
+                <p>${msg}</p>
+            </div>
+        `;
+        document.body.style.background = "#fff";
+        document.body.style.color = "#000";
+        throw new Error("Lisensi tidak valid — akses diblokir");
+    }
+
     function handleValidation(response) {
         if (response.status === "valid") {
-            console.log("✅ Lisensi valid untuk domain ini");
             localStorage.setItem(CACHE_KEY, JSON.stringify({
                 status: "valid",
                 timestamp: Date.now()
             }));
+            console.log("✅ Lisensi valid");
         } else {
-            console.warn("❌ Lisensi tidak valid atau domain tidak cocok");
             localStorage.setItem(CACHE_KEY, JSON.stringify({
                 status: "invalid",
                 timestamp: Date.now()
             }));
-            // Jika invalid, bisa redirect atau menampilkan pesan
-            // window.location.href = "/license-error.html";
+            blockSite("Kode lisensi tidak valid atau domain tidak cocok.");
         }
     }
 
@@ -30,15 +38,13 @@
         try {
             var parsed = JSON.parse(cache);
             if (Date.now() - parsed.timestamp < CACHE_TIME) {
-                console.log("ℹ️ Menggunakan hasil validasi dari cache");
                 if (parsed.status === "invalid") {
-                    console.warn("❌ Lisensi invalid (cache)");
+                    blockSite("Kode lisensi tidak valid (cache).");
                 }
-                return; // Tidak perlu request lagi
+                console.log("ℹ️ Menggunakan cache validasi");
+                return;
             }
-        } catch(e) {
-            console.error("Cache corrupt:", e);
-        }
+        } catch(e) {}
     }
 
     // Validasi via JSONP
@@ -48,7 +54,5 @@
                  "&domain=" + encodeURIComponent(DOMAIN) +
                  "&callback=handleValidation";
     document.body.appendChild(script);
-
-    // Bikin global callback untuk JSONP
     window.handleValidation = handleValidation;
 })();
