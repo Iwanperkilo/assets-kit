@@ -91,7 +91,7 @@
         showMessage('');
       } else {
         setLicenseStatus('invalid');
-        showMessage('Validasi Gagal.<br>Terjadi masalah koneksi.');
+        showMessage('Validasi Gagal.<br>Mohon periksa koneksi internet Anda.');
       }
     });
   }
