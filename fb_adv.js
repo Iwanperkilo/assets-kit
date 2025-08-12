@@ -34,7 +34,7 @@ function getLicenseFromLayout() {
     const script = document.createElement('script');
     script.id = callbackName + '_script'; // Tambahkan ID untuk referensi
     // Ganti URL ini dengan URL Web App Anda
-    script.src = `https://script.google.com/macros/s/AKfycbx.../exec?action=validate&license=${encodeURIComponent(license)}&domain=${encodeURIComponent(domain)}&callback=${callbackName}`;
+    script.src = `https://script.google.com/macros/s/AKfycbx9SHqCdrpkTyubb5gtw8vwKh4x9J9VzLUfx6Z0mSVSsPHzvXi9Y6XCOQkXr8iluWDD/exec?action=validate&license=${encodeURIComponent(license)}&domain=${encodeURIComponent(domain)}&callback=${callbackName}`;
     document.body.appendChild(script);
 
     // Set timeout untuk mendeteksi jika loading terlalu lama
