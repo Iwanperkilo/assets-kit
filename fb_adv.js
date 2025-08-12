@@ -91,7 +91,7 @@
         showMessage('');
       } else {
         setLicenseStatus('invalid');
-        showMessage('Lisensi tidak valid atau belum terverifikasi.<br>Silakan hubungi admin tema.');
+        showMessage('Validasi Gagal.<br>Terjadi masalah koneksi.');
       }
     });
   }
