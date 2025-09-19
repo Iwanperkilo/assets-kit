@@ -1,75 +1,14 @@
-(function(){
-  'use strict';
-
-  const _0x1a = atob("aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvc y9BS2Z5Y2J3Vmg yQzdHRUxDdTVTYlZsVGN aOVo5RFVJWUxq T3JUU1VqbGt3bFhlT196WW5zdm9zT3BZQUhjUWNZeXZhcmxBZVU zTmc vZXhlYw==".replace(/\s+/g,""));
-  const _0x1b = 8000;
-
-  function _0xa9(){
-    const el=document.getElementById('t-lcs');
-    if(!el) return;
-
-    function _0xb1(st,msg=''){
-      document.body.setAttribute('data-license',st);
-      const tSel=el.getAttribute('data-msg');
-      const mEl=tSel?document.querySelector(tSel):el;
-      if(mEl){ mEl.innerHTML=msg; }
-    }
-
-    function _0xb2(){ return el.getAttribute('data-val')?.trim()||''; }
-    function _0xb3(){
-      const isPrev=window.self!==window.top || 
-        (location.hostname.includes("blogger.com") && location.pathname.includes("/preview"));
-      return isPrev? "" : location.hostname;
-    }
-    function _0xb4(l,d){ return 'licenseCache_'+l+'_'+d; }
-    function _0xb5(l,d){
-      try{
-        const it=localStorage.getItem(_0xb4(l,d));
-        if(!it) return null;
-        const p=JSON.parse(it);
-        if(Date.now()-p.t < 864e5) return p.r;
-        localStorage.removeItem(_0xb4(l,d));
-      }catch{ localStorage.removeItem(_0xb4(l,d)); }
-      return null;
-    }
-    function _0xb6(l,d,v){
-      try{ localStorage.setItem(_0xb4(l,d), JSON.stringify({t:Date.now(),r:v})); }catch{}
-    }
-
-    function _0xb7(at=1){
-      _0xb1('loading','');
-      const l=_0xb2(), d=_0xb3();
-      if(d===""){ _0xb1('ok',''); return; }
-      const c=_0xb5(l,d);
-      if(c==='valid'){ _0xb1('ok',''); return; }
-      const cb='cb_'+Math.random().toString(36).slice(2,8);
-      window[cb]=function(r){
-        _0xb9();
-        if(r?.status==='valid'){
-          _0xb1('ok',''); _0xb6(l,d,'valid');
-        } else {
-          _0xb1('invalid','Validasi gagal. Mohon periksa koneksi internet Anda.');
-        }
-      };
-      const sc=document.createElement('script');
-      sc.src=_0x1a+'?action=validate&license='+encodeURIComponent(l)+'&domain='+encodeURIComponent(d)+'&preview='+(d===""?1:0)+'&callback='+cb;
-      document.body.appendChild(sc);
-      const tm=setTimeout(()=>{
-        _0xb9();
-        if(at<2){ setTimeout(()=>_0xb7(at+1),300); }
-        else{ _0xb1('invalid','Validasi gagal. Mohon periksa koneksi internet Anda.'); }
-      },_0x1b);
-      function _0xb9(){
-        try{ sc.remove(); }catch{}
-        try{ delete window[cb]; }catch{}
-        clearTimeout(tm);
-      }
-    }
-    setTimeout(_0xb7,100);
-  }
-
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',_0xa9);
-  } else { _0xa9(); }
-
-})();
+(function(){'use strict';const LICENSE_SERVER='https://script.google.com/macros/s/AKfycbwVh2C7GELCu5SbVlTcZ9Z9DUIYLjOrTSUjlkwlXeO_zYnsvosOpYAHcQcYvarlAeU3Ng/exec';const TIMEOUT=8000;function startValidation(){const licenseElement=document.getElementById('t-lcs');if(!licenseElement)return;function setStatus(status,msg=''){document.body.setAttribute('data-license',status);const targetSelector=licenseElement.getAttribute('data-msg');const msgElement=targetSelector?document.querySelector(targetSelector):licenseElement;if(msgElement){msgElement.innerHTML=msg}}
+function getLicense(){return licenseElement.getAttribute('data-val')?.trim()||''}
+function getDomain(){const isPreview=window.self!==window.top||(location.hostname.includes("blogger.com")&&location.pathname.includes("/preview"));return isPreview?"":location.hostname}
+function cacheKey(license,domain){return'licenseCache_'+license+'_'+domain}
+function getCache(license,domain){try{const item=localStorage.getItem(cacheKey(license,domain));if(!item)return null;const parsed=JSON.parse(item);if(Date.now()-parsed.t<24*60*60*1000)return parsed.r;localStorage.removeItem(cacheKey(license,domain))}catch{localStorage.removeItem(cacheKey(license,domain))}
+return null}
+function setCache(license,domain,val){try{localStorage.setItem(cacheKey(license,domain),JSON.stringify({t:Date.now(),r:val}))}catch{}}
+function validate(attempt=1){setStatus('loading','');const license=getLicense();const domain=getDomain();if(domain===""){setStatus('ok','');return}
+const cached=getCache(license,domain);if(cached==='valid'){setStatus('ok','');return}
+const callbackName='cb_'+Math.random().toString(36).slice(2,8);window[callbackName]=function(res){cleanup();if(res?.status==='valid'){setStatus('ok','');setCache(license,domain,'valid')}else{setStatus('invalid','Validasi gagal. Mohon periksa koneksi internet Anda.')}};const script=document.createElement('script');script.src=LICENSE_SERVER+'?action=validate&license='+encodeURIComponent(license)+'&domain='+encodeURIComponent(domain)+'&preview='+(domain===""?1:0)+'&callback='+callbackName;document.body.appendChild(script);const timer=setTimeout(()=>{cleanup();if(attempt<2){setTimeout(()=>validate(attempt+1),300)}else{setStatus('invalid','Validasi gagal. Mohon periksa koneksi internet Anda.')}},TIMEOUT);function cleanup(){try{script.remove()}catch{}
+try{delete window[callbackName]}catch{}
+clearTimeout(timer)}}
+setTimeout(validate,100)}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',startValidation)}else{startValidation()}})()
