@@ -1,19 +1,24 @@
-<script>
 (function(){
   'use strict';
 
-  const LICENSE_SERVER = 'https://script.google.com/macros/s/AKfycbwGyTkBGR2EvEukAc3WdbmrqSyTLLOHCjRH6rHMV5bkTsY_VmaSghW_xd4Mf1m2X5Ac/exec';
+  const LICENSE_SERVER = 'https://script.google.com/macros/s/AKfycbwVh2C7GELCu5SbVlTcZ9Z9DUIYLjOrTSUjlkwlXeO_zYnsvosOpYAHcQcYvarlAeU3Ng/exec';
   const TIMEOUT = 8000;
-  const licenseElement = document.getElementById('theme-license');
+  const licenseElement = document.getElementById('t-lcs');
   if(!licenseElement) return;
 
   function setStatus(status, msg=''){
     document.body.setAttribute('data-license', status);
-    licenseElement.innerHTML = msg;
+
+    const targetSelector = licenseElement.getAttribute('data-msg');
+    const msgElement = targetSelector ? document.querySelector(targetSelector) : licenseElement;
+
+    if(msgElement){
+      msgElement.innerHTML = msg;
+    }
   }
 
   function getLicense(){ 
-    return licenseElement.getAttribute('data-license')?.trim() || ''; 
+    return licenseElement.getAttribute('data-val')?.trim() || ''; 
   }
 
   function getDomain(){ 
@@ -46,7 +51,7 @@
   }
 
   function validate(attempt=1){
-    setStatus('loading','');
+    setStatus('loading',''); // loader aktif, tanpa pesan
 
     const license = getLicense();
     const domain = getDomain();
@@ -62,7 +67,7 @@
     window[callbackName] = function(res){
       cleanup();
       if(res?.status==='valid'){
-        setStatus('ok','');
+        setStatus('ok',''); // valid → tidak ada pesan
         setCache(license, domain, 'valid');
       } else {
         setStatus('invalid','Validasi gagal. Mohon periksa koneksi internet Anda.');
@@ -104,4 +109,3 @@
   }
 
 })();
-</script>
