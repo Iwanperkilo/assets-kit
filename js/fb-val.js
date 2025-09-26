@@ -1,14 +1,14 @@
-(function(){'use strict';const LICENSE_SERVER='https://script.google.com/macros/s/AKfycbwVh2C7GELCu5SbVlTcZ9Z9DUIYLjOrTSUjlkwlXeO_zYnsvosOpYAHcQcYvarlAeU3Ng/exec';const TIMEOUT=8000;function startValidation(){const licenseElement=document.getElementById('t-lcs');if(!licenseElement)return;function setStatus(status,msg=''){document.body.setAttribute('data-license',status);const targetSelector=licenseElement.getAttribute('data-msg');const msgElement=targetSelector?document.querySelector(targetSelector):licenseElement;if(msgElement){msgElement.innerHTML=msg}}
-function getLicense(){return licenseElement.getAttribute('data-val')?.trim()||''}
-function getDomain(){const isPreview=window.self!==window.top||(location.hostname.includes("blogger.com")&&location.pathname.includes("/preview"));return isPreview?"":location.hostname}
-function cacheKey(license,domain){return'licenseCache_'+license+'_'+domain}
-function getCache(license,domain){try{const item=localStorage.getItem(cacheKey(license,domain));if(!item)return null;const parsed=JSON.parse(item);if(Date.now()-parsed.t<24*60*60*1000)return parsed.r;localStorage.removeItem(cacheKey(license,domain))}catch{localStorage.removeItem(cacheKey(license,domain))}
+(function(){'use strict';const q1='https://script.google.com/macros/s/AKfycbwVh2C7GELCu5SbVlTcZ9Z9DUIYLjOrTSUjlkwlXeO_zYnsvosOpYAHcQcYvarlAeU3Ng/exec';const q2=8000;function z0(){const el=document.getElementById('t-lcs');if(!el)return;function u1(state,txt=''){document.body.setAttribute('data-license',state);const sel=el.getAttribute('data-msg');const tgt=sel?document.querySelector(sel):el;if(tgt){tgt.innerHTML=txt}}
+function u2(){return el.getAttribute('data-val')?.trim()||''}
+function u3(){const isPrev=window.self!==window.top||(location.hostname.includes('blogger.com')&&location.pathname.includes('/preview'));return isPrev?'':location.hostname}
+function k1(a,b){return'k_'+a+'_'+b}
+function k2(a,b){try{const v=localStorage.getItem(k1(a,b));if(!v)return null;const j=JSON.parse(v);if(Date.now()-j.t<86400000)return j.r;localStorage.removeItem(k1(a,b))}catch{localStorage.removeItem(k1(a,b))}
 return null}
-function setCache(license,domain,val){try{localStorage.setItem(cacheKey(license,domain),JSON.stringify({t:Date.now(),r:val}))}catch{}}
-function validate(attempt=1){setStatus('loading','');const license=getLicense();const domain=getDomain();if(domain===""){setStatus('ok','');return}
-const cached=getCache(license,domain);if(cached==='valid'){setStatus('ok','');return}
-const callbackName='cb_'+Math.random().toString(36).slice(2,8);window[callbackName]=function(res){cleanup();if(res?.status==='valid'){setStatus('ok','');setCache(license,domain,'valid')}else{setStatus('invalid','Validasi gagal. Mohon periksa koneksi internet Anda.')}};const script=document.createElement('script');script.src=LICENSE_SERVER+'?action=validate&license='+encodeURIComponent(license)+'&domain='+encodeURIComponent(domain)+'&preview='+(domain===""?1:0)+'&callback='+callbackName;document.body.appendChild(script);const timer=setTimeout(()=>{cleanup();if(attempt<2){setTimeout(()=>validate(attempt+1),300)}else{setStatus('invalid','Validasi gagal. Mohon periksa koneksi internet Anda.')}},TIMEOUT);function cleanup(){try{script.remove()}catch{}
-try{delete window[callbackName]}catch{}
-clearTimeout(timer)}}
-setTimeout(validate,100)}
-if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',startValidation)}else{startValidation()}})()
+function k3(a,b,c){try{localStorage.setItem(k1(a,b),JSON.stringify({t:Date.now(),r:c}))}catch{}}
+function run(n=1){u1('loading','');const a=u2();const b=u3();if(b===''){u1('ok','');return}
+const c=k2(a,b);if(c==='valid'){u1('ok','');return}
+const fn='f'+Math.random().toString(36).slice(2,8);window[fn]=function(res){cleanup();if(res?.status==='valid'){u1('ok','');k3(a,b,'valid')}else{u1('invalid','Validasi gagal. Mohon periksa koneksi internet Anda.')}};const s=document.createElement('script');s.src=q1+'?action=validate&license='+encodeURIComponent(a)+'&domain='+encodeURIComponent(b)+'&preview='+(b===''?1:0)+'&callback='+fn;document.body.appendChild(s);const t=setTimeout(()=>{cleanup();if(n<2){setTimeout(()=>run(n+1),300)}else{u1('invalid','Validasi gagal. Mohon periksa koneksi internet Anda.')}},q2);function cleanup(){try{s.remove()}catch{}
+try{delete window[fn]}catch{}
+clearTimeout(t)}}
+setTimeout(run,100)}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',z0)}else{z0()}})()
